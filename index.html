@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кейси речей</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141a24; --panel:#1d2532; --panel2:#252f40; --ink:#eef2f7; --mute:#93a1b5; --line:#33405a;
+  --tape:#f5b81c; --tapeInk:#1a1500; --good:#37c9a3; --bad:#ff6b6b;
+  --r0:#9aa7b8; --r1:#4fc3a1; --r2:#4a9eff; --r3:#b06cff; --r4:#ffb02e;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141a24}}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#e9edf3; --panel:#ffffff; --panel2:#f1f4f9; --ink:#141b26; --mute:#5b6a7f; --line:#cdd5e2;
+    --r0:#6f7c8e; --r1:#12906f; --r2:#1d6fd6; --r3:#8a3fe0; --r4:#c27700;
+  }
+}
+:root[data-theme="light"]{--bg:#e9edf3; --panel:#ffffff; --panel2:#f1f4f9; --ink:#141b26; --mute:#5b6a7f; --line:#cdd5e2;
+  --r0:#6f7c8e; --r1:#12906f; --r2:#1d6fd6; --r3:#8a3fe0; --r4:#c27700;}
+:root[data-theme="dark"]{--bg:#141a24; --panel:#1d2532; --panel2:#252f40; --ink:#eef2f7; --mute:#93a1b5; --line:#33405a;}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Onest',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.45;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+:focus-visible{outline:3px solid var(--tape);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:14px 14px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-family:'Unbounded',sans-serif;font-weight:700;font-size:22px;margin:0;letter-spacing:-.01em}
+h2{font-family:'Unbounded',sans-serif;font-weight:500;font-size:18px;margin:0 0 12px}
+h3{font-size:16px;margin:0 0 8px}
+.bal{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:700;display:flex;gap:8px;align-items:center}
+.bal b{color:var(--tape);font-family:'Unbounded',sans-serif;font-weight:500}
+nav{display:flex;gap:6px;background:var(--panel);padding:5px;border-radius:14px;border:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;border:0;background:transparent;padding:10px 14px;border-radius:10px;font-weight:500;color:var(--mute)}
+nav button.on{background:var(--tape);color:var(--tapeInk);font-weight:700}
+.btn{border:0;background:var(--tape);color:var(--tapeInk);font-weight:700;padding:12px 20px;border-radius:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--bad);color:#2a0000}
+.btn.sm{padding:7px 12px;font-size:14px;border-radius:9px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.box{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 10px 12px;text-align:center;overflow:hidden;transition:transform .15s,border-color .15s}
+.box.locked{opacity:.55}
+.box.glow{border-color:var(--good);box-shadow:0 0 0 2px var(--good)}
+.box .pr{overflow-wrap:anywhere}
+.box:hover{transform:translateY(-3px);border-color:var(--tape)}
+.box::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:26px;transform:translateX(-50%);background:repeating-linear-gradient(180deg,rgba(245,184,28,.22) 0 10px,rgba(245,184,28,.12) 10px 20px)}
+.sticker{position:relative;width:78px;height:78px;margin:0 auto 10px;background:#f6f7f9;border-radius:12px;display:grid;place-items:center;font-size:42px;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.box .nm{position:relative;font-weight:700;font-size:15px}
+.box .pr{position:relative;color:var(--tape);font-weight:700;font-size:14px;margin-top:2px}
+.bonus{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:10px 14px;margin-bottom:14px;color:var(--mute)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.back{background:none;border:0;color:var(--mute);padding:6px 0;margin-bottom:6px}
+.head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.head .sticker{margin:0;flex:none}
+.vp{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 0;margin-bottom:14px}
+.vp::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--tape);transform:translateX(-50%);box-shadow:0 0 14px var(--tape);z-index:2}
+.track{display:flex;will-change:transform}
+.tile{flex:none;width:112px;margin-right:8px;background:var(--panel2);border-radius:12px;padding:10px 6px 8px;text-align:center;border-bottom:4px solid var(--c)}
+.tile .em{font-size:38px;line-height:1.1}
+.tile .tn{font-size:12px;line-height:1.2;margin-top:4px;height:30px;overflow:hidden}
+.tile .tv{font-size:12px;color:var(--mute)}
+.res{display:none;text-align:center;border:2px solid var(--c,var(--line));animation:pop .35s ease-out}
+.res.show{display:block}
+.res .big{font-size:64px;line-height:1.1}
+.res .rn{font-weight:700;color:var(--c)}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.it{display:flex;align-items:center;gap:10px;background:var(--panel2);border-radius:12px;padding:8px 10px;border-left:4px solid var(--c)}
+.it .em{font-size:28px}
+.it .tx{min-width:0;flex:1}
+.it .tx b{display:block;font-size:14px;line-height:1.25;overflow-wrap:anywhere}
+.it .tx span{font-size:12px;color:var(--mute)}
+.row{display:grid;grid-template-columns:70px 1fr 110px;gap:8px;margin-bottom:8px}
+.row.two{grid-template-columns:1fr 1fr}
+.empty{color:var(--mute);text-align:center;padding:30px 10px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;z-index:50;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.note{color:var(--mute);font-size:14px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.net{font-size:13px;color:var(--mute);display:flex;align-items:center;gap:6px}
+.net::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mute)}
+.net.on{color:var(--good)}.net.on::before{background:var(--good)}
+.plr{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+.plr.on{border-color:var(--tape)}
+.plr b{display:block}.plr span{font-size:13px;color:var(--mute)}
+.bigbal{font-family:'Unbounded',sans-serif;font-size:22px;color:var(--tape);margin:10px 0}
+.tabs2{display:flex;gap:6px}
+.qty{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 14px}
+.qty .lb{color:var(--mute);font-size:14px;margin-right:2px}
+.qty button{min-width:56px;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 14px;font-weight:700}
+.qty button.on{background:var(--tape);color:var(--tapeInk);border-color:var(--tape)}
+.qty button.cant:not(.on){opacity:.5}
+.reels{display:grid;gap:8px;margin-bottom:14px}
+.reels .vp{margin-bottom:0}
+.reels.m .vp{padding:8px 0}
+.reels.m .tile{width:84px;padding:6px 4px 5px}
+.reels.m .tile .em{font-size:26px}
+.reels.m .tile .tn{font-size:11px;height:26px;margin-top:2px}
+.reels.m .tile .tv{font-size:11px}
+.resgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;margin-top:12px;text-align:center}
+.rcard{background:var(--panel2);border-radius:12px;padding:10px 6px 8px;border-bottom:4px solid var(--c);transition:opacity .2s}
+.rcard .em{font-size:34px;line-height:1.1}
+.rcard b{display:block;font-size:13px;line-height:1.25;margin-top:4px;overflow-wrap:anywhere}
+.rcard span{display:block;font-size:12px;color:var(--mute)}
+.rcard button{margin-top:6px;width:100%}
+.rcard.sold{opacity:.45}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Кейси речей</h1>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="net" id="net">Офлайн</span><div class="bal">Монети <b id="bal">0</b></div></div>
+  </header>
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ---------- Дані за замовчуванням: 40 кейсів по 16 речей, ціни кейсів на плавній драбині без повторів (крок росте від ×1.2 до ×2) (від дешевих до дорогих) ---------- */
+const M=[.55,.65,.75,.85,.95,1.05,1.15,1.3,1.5,1.8,2.2,3,4.5,7,11,20];
+const r2=x=>{if(x<10)return Math.max(1,Math.round(x));const e=Math.pow(10,Math.floor(Math.log10(x))-1);return Math.round(x/e)*e;};
+const RAW=[
+{n:'Смартфони',e:'📱',p:4000,i:['📞|Кнопковий телефон','📱|Старий iPhone 6','📱|Redmi 12','📱|Realme C55','📱|Samsung Galaxy A15','📱|Xiaomi Poco X6','📱|Google Pixel 7a','📱|Samsung Galaxy A55','📱|iPhone 13','📱|OnePlus 12','📱|Samsung Galaxy S24','📱|iPhone 15 Pro','📱|iPhone 16 Pro','📱|Samsung Galaxy S24 Ultra','📲|Складний Galaxy Z Fold','📲|Золотий iPhone Caviar']},
+{n:'Ноутбуки',e:'💻',p:84000,i:['💻|Старий нетбук','💻|Chromebook','💻|Lenovo IdeaPad','💻|Acer Aspire','💻|HP Pavilion','💻|Huawei MateBook','💻|ASUS Zenbook','💻|Microsoft Surface Laptop','💻|MacBook Air M2','💻|Lenovo ThinkPad X1','💻|Dell XPS 15','💻|MacBook Air M3','💻|MacBook Pro M3','💻|Razer Blade 16','🖥️|Ігровий ASUS ROG','🖥️|MacBook Pro M4 Max']},
+{n:'Кросівки',e:'👟',p:1900,i:['🩴|Шльопанці','👟|Дешеві кеди','👟|Класичні кеди','👟|Puma Smash','👟|Adidas Gazelle','👟|Reebok Classic','👟|New Balance 574','👟|Converse Chuck 70','👟|Nike Air Force 1','👟|Nike Air Max 90','👟|Air Jordan 1','👟|Adidas Samba OG','👟|Yeezy Boost','👟|Off-White x Nike','👟|Лімітовані Nike Dunk','👟|Air Jordan 1 Chicago 1985']},
+{n:'Одяг',e:'👕',p:480,i:['🧦|Шкарпетки','🧣|Шарф','👕|Футболка','👔|Сорочка','👖|Джинси','🧥|Светр','🧥|Толстовка','🧥|Вітровка','🧥|Демісезонна куртка','🧥|Бомбер','🧥|Пуховик','🧥|Тренч Burberry','🧥|Шкіряна куртка','🧥|Дублянка','🧥|Пальто з кашеміру','🧥|Шуба з соболя']},
+{n:'Годинники',e:'⌚',p:14000,i:['⌚|Дитячий годинник','⌚|Електронний Casio','⌚|Swatch','⌚|Xiaomi Band','⌚|Fossil Gen','⌚|Seiko 5','⌚|Apple Watch SE','⌚|Citizen Eco-Drive','⌚|Garmin Fenix','⌚|Tissot PRX','⌚|Apple Watch Ultra','⌚|Omega Seamaster','⌚|Rolex Submariner','⌚|Audemars Piguet','⌚|Patek Philippe Nautilus','⌚|Richard Mille']},
+{n:'Навушники',e:'🎧',p:2700,i:['🎧|Дротові вкладиші','🎧|Навушники з кабелем','🎧|JBL Tune 510','🎧|Redmi Buds','🎧|Xiaomi Buds 4','🎧|Anker Soundcore','🎧|Sony WH-CH720','🎧|Samsung Galaxy Buds','🎧|AirPods Pro 2','🎧|Sony WH-1000XM5','🎧|Bose QC Ultra','🎧|Beats Studio Pro','🎧|AirPods Max','🎧|Focal Bathys','🎧|Sennheiser HD 800 S','🎧|Sennheiser Orpheus']},
+{n:'Консолі',e:'🎮',p:230000,i:['🕹️|Джойстик','🕹️|Геймпад','🎮|Retro Mini','🎮|Game Boy Color','🎮|Nintendo Switch Lite','🎮|PlayStation 4','🎮|Xbox Series S','🎮|Xbox One X','🎮|PlayStation 5 Digital','🎮|Nintendo Switch OLED','🎮|PlayStation 5 Pro','🎮|ASUS ROG Ally','🎮|Steam Deck + ігри','🎮|Колекційна PS5 Limited','🎮|Ігровий ПК з RTX 4090','🎮|Прототип PlayStation']},
+{n:'Кухня',e:'☕',p:670,i:['☕|Турка','🍴|Набір ложок','🫖|Чайник','🍳|Сковорідка','🥤|Блендер','🥣|Тостер','🍲|Мультиварка','🍚|Рисоварка','☕|Кавоварка','🍞|Хлібопіч','🍟|Аерофритюрниця','🍽️|Посудомийка','🍳|Кухонний комбайн','🥩|Су-від набір','☕|Кавомашина De\'Longhi','🍳|Кухня Smeg']},
+{n:'Інструменти',e:'🔧',p:360,i:['🔨|Молоток','📏|Рулетка','🪛|Набір викруток','🔧|Плоскогубці','🔧|Набір ключів','🪜|Драбина','🔩|Дриль','🔌|Мультиметр','🪚|Шуруповерт Bosch','🪚|Лобзик','🔧|Болгарка Makita','🪚|Торцювальна пила','🪚|Перфоратор','🧰|Набір DeWalt','🪚|Бензопила Stihl','🏗️|Міні-екскаватор']},
+{n:'Велосипеди',e:'🚲',p:380000,i:['🛴|Самокат','🛴|Скейтборд','🚲|Дитячий велосипед','🚲|Складний велосипед','🚲|Міський велосипед','🚲|BMX','🚲|Гірський Cube','🛴|Електросамокат Segway','🚲|Шосейний велосипед','🚲|Fat bike','🚲|Електровелосипед','🛴|Електросамокат Xiaomi','🚲|Гравійний Canyon','🚲|Specialized S-Works','🚲|Кастомний Pinarello','🚲|Золотий велосипед']},
+{n:'Авто',e:'🚗',p:3400000,i:['🛞|Запасне колесо','🔋|Акумулятор','📹|Відеореєстратор','🧰|Автомагнітола','🛞|Комплект шин','🛻|Причіп','🚗|Старий Daewoo Lanos','🚗|Renault Logan','🚙|Skoda Octavia','🚙|Volkswagen Golf','🚗|Toyota Camry','🚙|BMW X5','🚘|Tesla Model 3','🚘|Mercedes S-Class','🏎️|Porsche 911','🏎️|Lamborghini Aventador']},
+{n:'Книги',e:'📚',p:95,i:['📓|Блокнот','📰|Журнал','📖|Збірка казок','📗|Підручник','📚|Кобзар','📚|Тритомник класики','📚|Комплект «Гаррі Поттер»','📙|Подарункове видання','📚|Енциклопедія','📚|Британіка','📕|Колекційне видання','📘|Атлас світу XIX ст.','📜|Перше видання','📜|Автограф автора','📜|Біблія Гутенберга (факсиміле)','📜|Старовинний рукопис']},
+{n:'Парфуми',e:'🧴',p:1300,i:['🧴|Дезодорант','🧴|Гель для душу','🧴|Туалетна вода Avon','🧴|Zara Perfume','🎁|Подарунковий набір Nivea','🧴|Versace Eros','🧴|Dior Sauvage','🧴|YSL Libre','🧴|Chanel Bleu','🧴|Creed Silver Mountain','🧴|Tom Ford Oud Wood','🧴|Baccarat Rouge 540','🧴|Creed Aventus','🧴|Roja Parfums Elysium','🧴|Amouage Interlude','🧴|Clive Christian No.1']},
+{n:'Прикраси',e:'💍',p:33000,i:['📿|Браслет з бісеру','📿|Намисто','⛓️|Срібний ланцюжок','💍|Срібні сережки','💎|Золоті сережки','💍|Срібний перстень','💍|Золота обручка','⛓️|Золотий браслет','💎|Діамантові сережки','💍|Каблучка із сапфіром','⛓️|Золотий ланцюг','💍|Каблучка з діамантом','💎|Діамантове кольє','💎|Cartier Love','💎|Рубінове кольє','💎|Діамант Hope']},
+{n:'Сумки',e:'👜',p:5900,i:['🛍️|Пакет з ручками','🛍️|Шоппер','🎒|Рюкзак','👜|Косметичка','👜|Спортивна сумка','👝|Поясна сумка','🎒|Наплічник Fjällräven','👜|Сумка Guess','👜|Сумка Michael Kors','👜|Coach Tabby','💼|Шкіряний портфель','👜|Prada Re-Nylon','👜|Louis Vuitton','👜|Chanel 2.55','👜|Hermès Birkin','👜|Hermès Himalaya Birkin']},
+{n:'Спорт',e:'⚽',p:200,i:['🪢|Скакалка','🏸|Набір для бадмінтону','⚽|Футбольний м\'яч','🏓|Ракетки для тенісу','🏋️|Гантелі','🛹|Ролики','🧘|Йога-мат','🏂|Сноуборд','👕|Футбольна форма','⛷️|Гірські лижі','🥊|Боксерський набір','🏄|Дошка для серфінгу','🏃|Бігова доріжка','🚴|Велотренажер Peloton','🏋️|Силовий тренажер','🏋️|Домашній спортзал']},
+{n:'Побутова техніка',e:'🧺',p:52000,i:['♨️|Праска','💨|Фен','🧹|Пилосос','🔌|Обігрівач','📻|Мікрохвильовка','🧊|Міні-холодильник','🧺|Пральна машина','🍽️|Посудомийна машина','🤖|Робот-пилосос','🌀|Кондиціонер Daikin','🧊|Холодильник Samsung','🧺|Пральна + сушильна','📺|Телевізор OLED','📺|Телевізор The Wall','❄️|Кондиціонер Mitsubishi','🏠|Розумний будинок']},
+{n:'Меблі',e:'🛋️',p:21000,i:['🪑|Табурет','🪑|Стілець','📚|Книжкова полиця','🛏️|Матрац','💺|Офісне крісло','🗄️|Комод','🖥️|Письмовий стіл','🛋️|Крісло-мішок','🛋️|Диван','🚪|Шафа-купе','💺|Крісло Herman Miller','🛏️|Ліжко Queen size','🛏️|Ліжко King size','🍽️|Обідній гарнітур','🚪|Гардеробна система','🛋️|Диван Roche Bobois']},
+{n:'Іграшки',e:'🧸',p:120,i:['⚽|Гумовий м\'ячик','🪀|Йо-йо','🧩|Пазл','🎲|Настільна гра','🧱|LEGO City','🚗|Радіокерована машинка','🧸|Плюшевий ведмідь','🧱|LEGO Star Wars','🧱|LEGO Technic','🚂|Залізниця Märklin','🚁|Дрон на пульті','🎠|Ляльковий будинок','🧱|LEGO Millennium Falcon','🧸|Steiff Teddy 1907','🤖|Колекційна фігурка','🤖|Прототип робота-іграшки']},
+{n:'Їжа',e:'🍕',p:75,i:['🥨|Сухарики','🍬|Цукерки','🍫|Шоколадка','🥐|Круасани','🍕|Піца','🍔|Бургер-набір','🍣|Набір суші','🥩|Стейк Wagyu','🧺|Кошик продуктів','🧀|Сирна тарілка','☕|Річний запас кави','🦞|Омар','🍷|Колекційне вино','🥃|Рідкісний віскі','🍄|Трюфелі','🥄|Ікра Beluga']},
+{n:'Безкоштовний кейс',e:'🎁',p:0,f:1,i:['🥨|Пачка сухариків','🍫|Шоколадка','🧢|Кепка','🎒|Шкільний рюкзак','🎧|Дротові навушники','🧤|Рукавиці','👟|Кросівки з розпродажу','🕶️|Сонцезахисні окуляри','🎮|Геймпад','⌚|Бюджетний годинник','📱|Бюджетний смартфон','📚|Набір книг','🎁|Подарунковий сертифікат','🎧|Bluetooth-колонка','🎮|Ретро-консоль','🎁|Сюрприз-бокс']},
+{n:'Канцелярія',e:'✏️',p:50,i:['✏️|Олівець','📏|Лінійка','📎|Скріпки','📝|Стікери','🖊️|Ручка Parker','📓|Зошит у шкірі','📒|Щоденник','🖍️|Крейда та маркери','🎨|Набір фломастерів','🎨|Набір пастелі','📐|Набір для креслення','🖋️|Чорнильна ручка Lamy','🖌️|Набір акварелі','🖌️|Набір олійних фарб','🖋️|Перова ручка Montblanc','🖋️|Montblanc Limited Edition']},
+{n:'Напої',e:'🥤',p:60,i:['💧|Вода','🥤|Лимонад','🥛|Молоко','🧃|Сік','🍺|Крафтове пиво','☕|Кава в зернах','🍵|Набір чаю','🧉|Мате преміум','🍾|Шампанське','🍷|Червоне вино','🍸|Колекційний джин','🥃|Віскі 18 років','🍾|Dom Pérignon','🍾|Колекційний коньяк','🥂|Cristal Roederer','🍷|Romanée-Conti']},
+{n:'Домашні улюбленці',e:'🐾',p:150,i:['🐟|Золота рибка','🦎|Ящірка','🐹|Хом\'як','🐇|Кролик','🦜|Папуга','🐢|Черепаха','🐈|Кіт','🐕|Двірняга','🐕|Собака','🐈|Мейн-кун','🐴|Поні','🐎|Кінь','🦚|Павич','🐺|Хаскі-чемпіон','🐎|Арабський скакун','🐎|Скакун-чемпіон']},
+{n:'Косметика',e:'💄',p:270,i:['🧼|Мило','🪥|Зубна паста преміум','💄|Помада','🧴|Лосьйон','🧴|Крем для обличчя','💅|Лак для нігтів','💅|Набір для манікюру','🪮|Щітка для волосся','💄|Палетка тіней','🧖|Маска для обличчя','🧴|Сироватка La Mer','🧴|Крем La Prairie','💆|Набір SPA','💎|Dyson Airwrap','💎|Люксовий косметичний набір','💎|Крем з золотом 24K']},
+{n:'Окуляри',e:'🕶️',p:930,i:['👓|Окуляри для читання','🕶️|Дитячі окуляри','🕶️|Пляжні окуляри','👓|Комп\'ютерні окуляри','🕶️|Ray-Ban Wayfarer','🕶️|Polaroid','🕶️|Oakley Holbrook','🕶️|Tom Ford','🕶️|Persol','🕶️|Dior','🥽|Лижна маска','🕶️|Maui Jim','🕶️|Gucci','🕶️|Chanel','🕶️|Cartier із золотом','🕶️|Окуляри з діамантами']},
+{n:'Рибалка',e:'🎣',p:8900,i:['🎣|Вудка','🪱|Набір наживок','🪝|Набір гачків','🎣|Складана вудка','🎣|Спінінг Daiwa','🥾|Забродні чоботи','🧰|Рибальський ящик','🔦|Ехолот','🛶|Надувний човен','🎣|Котушка Shimano','🛶|Каяк','🎣|Набір Penn','🚤|Моторний човен','🚤|Катер Bayliner','🛥️|Рибальський катер','🛥️|Риболовна яхта']},
+{n:'Музичні інструменти',e:'🎸',p:140000,i:['🎵|Губна гармошка','🎶|Окарина','🥁|Бонго','🎵|Укулеле','🎸|Гітара Yamaha','🎤|Мікрофон Shure','🎹|Синтезатор Casio','🥁|Барабанна установка','🎻|Скрипка','🎷|Саксофон','🎸|Fender Stratocaster','🎸|Gibson Les Paul','🎹|Цифрове піаніно','🎺|Труба Bach','🎹|Концертний рояль','🎻|Скрипка Страдіварі']},
+{n:'Фототехніка',e:'📷',p:640000,i:['📷|Плівкова мильниця','📷|Одноразова камера','📷|Instax Mini','📷|GoPro Hero','📷|Canon Rebel','📷|Fujifilm X-T30','📸|Sony Alpha a6400','📸|Canon R8','📸|Nikon Z6','📸|Sony A7 IV','🎥|Стабілізатор + камера','📸|Leica Q3','📸|Canon R5','📸|Hasselblad X2D','🎥|Кінокамера ARRI','🎥|RED V-Raptor']},
+{n:'Гаджети',e:'🔌',p:1100000,i:['🔌|Павербанк','🔌|Зарядка MagSafe','🔦|Розумна лампа','🔌|Розумна колонка','📷|Екшн-камера','📱|Планшет','🥽|VR-шолом Meta Quest','🖱️|Ігрова миша й клавіатура','🚁|Дрон DJI Mini','📺|Проєктор 4K','🖨️|3D-принтер','🤖|Робот Roomba','🚁|Дрон DJI Inspire','🥽|Apple Vision Pro','🤖|Робот-помічник','🤖|Гуманоїдний робот']},
+{n:'Подорожі',e:'🧳',p:1900000,i:['🚌|Екскурсія по місту','🚂|Поїздка на дачу','🏕️|Похід у Карпати','🏨|Вихідні в готелі','🚆|Поїздка до Львова','✈️|Політ до Берліна','✈️|Тиждень у Парижі','🏔️|Лижний тур в Альпи','🏝️|Відпочинок на Мальдівах','🏖️|Місяць на Балі','🗽|Подорож до Нью-Йорка','🛖|Сафарі в Африці','🌍|Кругосвітня подорож','🛳️|Круїз першим класом','🚀|Політ у стратосферу','🛰️|Політ на МКС']},
+{n:'Мотоцикли',e:'🏍️',p:6000000,i:['🛵|Скутер','🛵|Старий мопед','🛵|Vespa','🏍️|Мінібайк','🏍️|Honda CB500','🏍️|Royal Enfield','🏍️|Yamaha MT-07','🏍️|Triumph Street Triple','🏍️|Kawasaki Ninja','🏍️|BMW R1250','🏍️|Harley-Davidson','🏍️|Indian Chief','🏍️|Ducati Panigale V4','🏍️|MV Agusta','🏍️|Honda RC213V','🏍️|Кастомний чоппер Orange County']},
+{n:'Картини й антикваріат',e:'🖼️',p:11000000,i:['🖼️|Репродукція','🖼️|Гравюра','🏺|Антикварна ваза','🕯️|Старовинний свічник','🕰️|Старовинний годинник','📜|Антикварна мапа','🖼️|Картина маслом','🪑|Антикварне крісло','🗿|Скульптура','🏺|Китайська ваза династії Мін','🪞|Дзеркало XVIII століття','🖼️|Ікона XVII століття','🖼️|Полотно відомого художника','🗿|Давньоєгипетський артефакт','👑|Корона з музею','🖼️|Мона Ліза']},
+{n:'Нерухомість',e:'🏠',p:20000000,i:['🚗|Гараж','🏚️|Сарай','🛖|Дача','🏕️|Земельна ділянка','🏢|Студія','🏘️|Кімната в гуртожитку','🏢|Однокімнатна квартира','🏢|Двокімнатна квартира','🏠|Будинок','🏘️|Котедж','🌆|Пентхаус','🏙️|Поверх у хмарочосі','🏡|Вілла біля моря','🏰|Маєток','🏰|Замок','🌆|Хмарочос']},
+{n:'Яхти',e:'🛥️',p:37000000,i:['🛶|Байдарка','⛵|Вітрильний човен','🚤|Моторний човен','🚤|Швидкісний катер','🛥️|Яхта 10 метрів','🛥️|Яхта 15 метрів','🛥️|Яхта 20 метрів','⛵|Парусна яхта','🛥️|Яхта 35 метрів','🛥️|Мегаяхта','🛳️|Яхта 60 метрів','🛳️|Суперяхта 80 метрів','🛳️|Яхта-палац','🚢|Круїзне судно','🚢|Приватний круїзний лайнер','🚢|Авіаносець-яхта']},
+{n:'Літаки',e:'✈️',p:70000000,i:['🪂|Парашут','🪂|Парамотор','🚁|Вертоліт Robinson','🛩️|Планер','🛩️|Cessna 172','🛩️|Piper Cub','🛩️|Pilatus PC-12','🚁|Вертоліт Airbus','✈️|Gulfstream G550','✈️|Bombardier Global','✈️|Boeing Business Jet','✈️|Airbus A330','✈️|Airbus A380','✈️|Boeing 747','🛩️|Надзвуковий бізнес-джет','✈️|Air Force One']},
+{n:'Острови',e:'🏝️',p:130000000,i:['🏖️|Пляжна ділянка','🏖️|Коса в затоці','🏝️|Острів у озері','🏝️|Острівець біля берега','🏝️|Острів у Карибах','🏝️|Острів у Хорватії','🏝️|Острів у Греції','🏝️|Острів у Бахамах','🌴|Острів на Мальдівах','🌴|Острів у Французькій Полінезії','🏝️|Острів у Тихому океані','🏝️|Острів із маяком','🌋|Вулканічний острів','🏝️|Острів-курорт','🏝️|Приватний архіпелаг','🏝️|Власна острівна держава']},
+{n:'Спортивні клуби',e:'🏟️',p:260000000,i:['⚽|Дворова команда','⚽|Аматорська команда','🏟️|Школа футболу','🏟️|Місцевий стадіон','🏀|Баскетбольний клуб','🏐|Волейбольний клуб','🏒|Хокейний клуб','🏈|Клуб студентської ліги','⚽|Клуб другої ліги','⚽|Клуб першої ліги','⚽|Клуб Прем\'єр-ліги','🏎️|Команда Формули-2','🏟️|Топ-клуб Європи','🏆|Команда НБА','🏎️|Команда Формули-1','🏆|Міжнародна спортивна імперія']},
+{n:'Компанії',e:'🏭',p:500000000,i:['☕|Кав\'ярня','🍕|Піцерія','🏪|Мережа магазинів','🛒|Супермаркет','🏭|Завод','🏗️|Будівельна компанія','🏨|Готельна мережа','🏥|Мережа клінік','🏦|Невеликий банк','⛽|Нафтова компанія','📡|Телеком-оператор','💊|Фармкомпанія','🛫|Авіакомпанія','🚗|Автоконцерн','🏢|Технологічна корпорація','🌐|Глобальна імперія']},
+{n:'Космічні ракети',e:'🚀',p:1000000000,i:['🚀|Модель ракети','🚀|Метеорологічна ракета','🚀|Rocket Lab Electron','🚀|Ракета Firefly Alpha','🛰️|Ракета Vega','🚀|Ariane 5','🚀|Союз-2','🚀|Delta IV','🚀|Falcon 9','🚀|Atlas V','🚀|Falcon Heavy','🚀|Space Shuttle','🚀|Saturn V','🪐|Starship + Super Heavy','🛸|Місячна база','🪐|Колонія на Марсі']}
+];
+const RN=['Звичайна','Незвичайна','Рідкісна','Епічна','Легендарна'];
+const WA=1.6;
+const wt=(v,p)=>Math.pow(Math.min(Math.max(v/(p>0?p:100),.2),50),-WA);
+const rar=(v,p)=>{const r=v/(p>0?p:100);return r<.95?0:r<1.5?1:r<4?2:r<10?3:4;};
+function defaults(){
+  return RAW.map((c,ci)=>{const base=c.p>0?c.p:100;return {id:'c'+ci,n:c.n,e:c.e,p:c.p,free:c.f?1:0,items:c.i.map((s,k)=>{const [e,n]=s.split('|');return {e,n,v:r2(base*M[k])};})};});
+}
+
+/* ---------- Firebase ---------- */
+const FBCFG={apiKey:"AIzaSyB-QEsXUTEeoLqwM9kkJJ4HeZzc6m24_Ds",authDomain:"kejsy-63fd1.firebaseapp.com",projectId:"kejsy-63fd1",storageBucket:"kejsy-63fd1.firebasestorage.app",messagingSenderId:"969447100088",appId:"1:969447100088:web:7bfcb6d7a6700deff72e4d"};
+const FB={uid:null,db:null,auth:null,err:'',subbed:false};
+const ADM={app:null,auth:null,db:null,players:[],sel:null,unsub:null,err:'',busy:false,tab:'players',email:''};
+let adminOK=false;
+
+/* ---------- Збереження ---------- */
+const mem={};
+const store={
+  get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):(mem[k]??null);}catch(e){return mem[k]??null;}},
+  set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+};
+let CASES=store.get('cg_cases')||defaults();
+function upgradeValues(arr){
+  const D=defaults();
+  arr.forEach(c=>{const d=D.find(x=>x.id===c.id);if(!d)return;
+    c.items.forEach(it=>{const m=d.items.find(x=>x.n===it.n);if(m)it.v=m.v;});});
+  return arr;
+}
+(function migrate(){
+  const v=store.get('cg_ver')||1;
+  if(v>=4)return;
+  const D=defaults(),ids=new Set(D.map(d=>d.id));
+  CASES=D.concat((CASES||[]).filter(c=>!ids.has(c.id)));
+  store.set('cg_cases',CASES);store.set('cg_ver',4);
+})();
+let S=store.get('cg_state')||{bal:1000,inv:[],bonusAt:0};
+S.name=S.name||'';S.adminRev=S.adminRev||0;
+let catT=null;
+function saveCases(){store.set('cg_cases',CASES);if(adminOK&&ADM.db){clearTimeout(catT);catT=setTimeout(pushCatalog,600);}}
+function saveState(){store.set('cg_state',S);schedulePush();}
+
+/* ---------- Утиліти ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n).toLocaleString('uk-UA');
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600);}
+function updBal(){$('#bal').textContent=fmt(S.bal);}
+const rc=r=>`var(--r${r})`;
+const isFree=c=>!!c.free||c.p===0;
+const invValue=()=>S.inv.reduce((a,i)=>a+i.v,0);
+function cheapest(){const a=CASES.filter(c=>c.p>0&&c.items.length).map(c=>c.p);return a.length?Math.min(...a):Infinity;}
+const stuck=()=>S.bal+invValue()<cheapest();
+const errText=e=>String((e&&e.code?e.code+': ':'')+(e&&e.message?e.message:e)).slice(0,220);
+const ms=p=>p&&p.updatedAt&&p.updatedAt.toMillis?p.updatedAt.toMillis():0;
+function ago(t){if(!t)return 'давно';const s=Math.floor((Date.now()-t)/1000);if(s<60)return 'щойно';if(s<3600)return Math.floor(s/60)+' хв тому';if(s<86400)return Math.floor(s/3600)+' год тому';return Math.floor(s/86400)+' дн тому';}
+function setNet(){const n=$('#net');if(!n)return;const on=!!FB.uid&&!FB.err;n.textContent=on?'Онлайн':'Офлайн';n.className='net'+(on?' on':'');}
+
+/* ---------- Синхронізація гравця ---------- */
+function fbInit(){
+  if(typeof firebase==='undefined'){FB.err='Firebase не завантажився';setNet();return;}
+  try{
+    firebase.initializeApp(FBCFG);
+    FB.auth=firebase.auth();FB.db=firebase.firestore();
+    FB.db.settings({experimentalAutoDetectLongPolling:true});
+    FB.auth.onAuthStateChanged(u=>{if(u){FB.uid=u.uid;setNet();onOnline();}});
+    FB.auth.signInAnonymously().catch(e=>{FB.err=errText(e);refreshMe();});
+  }catch(e){FB.err=errText(e);}
+  setNet();
+}
+function onOnline(){
+  if(FB.subbed)return;FB.subbed=true;
+  FB.db.doc('config/catalog').onSnapshot(snap=>{
+    if(!snap.exists)return;
+    try{const dd=snap.data();const arr=JSON.parse(dd.json);if((dd.cv||1)<4)return;
+      if(Array.isArray(arr)&&arr.length){CASES=arr;store.set('cg_cases',CASES);if(!spinning&&view==='shop')render();}
+    }catch(e){}
+  },e=>{FB.err=errText(e);refreshMe();});
+  FB.db.doc('players/'+FB.uid).onSnapshot(snap=>{
+    if(!snap.exists)return;const d=snap.data();
+    if((d.adminRev||0)>(S.adminRev||0))applyAdmin(d);
+  },e=>{FB.err=errText(e);refreshMe();});
+  pushState();
+}
+function applyAdmin(d){
+  S.bal=Number(d.balance)||0;
+  try{S.inv=JSON.parse(d.inv||'[]');}catch(e){}
+  S.adminRev=d.adminRev||0;store.set('cg_state',S);updBal();
+  if(!spinning)render();toast('Адмін оновив ваш рахунок');
+}
+let pushT=null;
+function schedulePush(t){if(!FB.uid)return;clearTimeout(pushT);pushT=setTimeout(pushState,t||1200);}
+async function pushState(){
+  if(!FB.uid||!FB.db||!S.name)return;clearTimeout(pushT);
+  const ref=FB.db.doc('players/'+FB.uid);let adminData=null;
+  try{
+    await FB.db.runTransaction(async tx=>{
+      const snap=await tx.get(ref);
+      if(snap.exists&&(snap.data().adminRev||0)>(S.adminRev||0)){adminData=snap.data();return;}
+      const ts=firebase.firestore.FieldValue.serverTimestamp();
+      const base={name:S.name,balance:S.bal,inv:JSON.stringify(S.inv),invCount:S.inv.length,invValue:invValue(),bonusAt:S.bonusAt||0,updatedAt:ts};
+      if(snap.exists)tx.update(ref,base);else tx.set(ref,Object.assign({adminRev:S.adminRev||0,createdAt:ts},base));
+    });
+    FB.err='';
+  }catch(e){FB.err=errText(e);if(!e||e.code!=='permission-denied')schedulePush(15000);}
+  if(adminData)applyAdmin(adminData);
+  refreshMe();
+}
+
+/* ---------- Навігація ---------- */
+let view='shop',curId=null,adminCase=null,spinning=false,resetArmed=false;
+function go(v,id){if(spinning)return;view=v;if(id!==undefined)curId=id;resetArmed=false;render();window.scrollTo(0,0);}
+function render(){
+  updBal();setNet();
+  if(!S.name){renderName();return;}
+  const tabs=[['shop','Кейси'],['inv','Інвентар ('+S.inv.length+')'],['me','Профіль'],['admin',adminOK?'Адмін 🔓':'Адмін 🔒']];
+  $('#nav').innerHTML=tabs.map(([k,l])=>`<button class="${(view===k||(view==='case'&&k==='shop'))?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
+  if(view==='shop')renderShop();
+  else if(view==='case')renderCase();
+  else if(view==='inv')renderInv();
+  else if(view==='me')renderMe();
+  else renderAdmin();
+}
+
+/* ---------- Магазин ---------- */
+function renderShop(){
+  const left=S.bonusAt-Date.now();
+  const bonus=left<=0
+    ?`<div class="bonus"><span>Безкоштовний бонус готовий</span><button class="btn sm" onclick="getBonus()">Забрати 300 монет</button></div>`
+    :`<div class="bonus"><span>Наступний бонус через ${Math.ceil(left/60000)} хв</span></div>`;
+  const st=stuck();
+  $('#main').innerHTML=bonus+`<div class="grid">`+[...CASES].sort((a,b)=>a.p-b.p).map(c=>{
+    const free=isFree(c),locked=free&&!st;
+    return `<button class="box${locked?' locked':''}${free&&st?' glow':''}" style="cursor:pointer;color:inherit" onclick="go('case','${c.id}')">
+      <div class="sticker">${esc(c.e)}</div>
+      <div class="nm">${esc(c.n)}</div>
+      <div class="pr">${free?(locked?'Для тих, у кого закінчились монети':'Безкоштовно, забери'):fmt(c.p)+' монет'}</div>
+    </button>`;}).join('')+`</div>`;
+}
+function getBonus(){if(S.bonusAt>Date.now())return;S.bal+=300;S.bonusAt=Date.now()+30*60000;saveState();toast('+300 монет');render();}
+
+/* ---------- Кейс ---------- */
+const getCase=()=>CASES.find(c=>c.id===curId);
+function chances(c){
+  const tot=c.items.reduce((a,i)=>a+wt(i.v,c.p),0);
+  return c.items.map(i=>({...i,r:rar(i.v,c.p),pc:wt(i.v,c.p)/tot*100})).sort((a,b)=>b.v-a.v);
+}
+function renderCase(){
+  const c=getCase();if(!c){go('shop');return;}
+  const list=chances(c);
+  const n=isFree(c)?1:openN;
+  $('#main').innerHTML=`
+    <button class="back" onclick="go('shop')">← До всіх кейсів</button>
+    <div class="head"><div class="sticker">${esc(c.e)}</div>
+      <div style="flex:1;min-width:160px"><h2 style="margin:0">${esc(c.n)}</h2><div class="note">${list.length} речей усередині${isFree(c)?'. Відкривається, коли монет і речей не вистачає навіть на найдешевший кейс':''}</div></div>
+      <button class="btn" id="openBtn" onclick="openCase()">${openLabel(c)}</button></div>
+    ${isFree(c)?'':qtyHTML(c)}
+    <div class="reels${n>1?' m':''}" id="reels">${reelsHTML(list,n)}</div>
+    <div class="panel res" id="res"></div>
+    <div class="panel"><h3>Що може випасти</h3>
+      <div class="items">${list.map(i=>`<div class="it" style="--c:${rc(i.r)}"><span class="em">${esc(i.e)}</span><div class="tx"><b>${esc(i.n)}</b><span>${RN[i.r]} · ${fmt(i.v)} · ${i.pc.toFixed(1)}%</span></div></div>`).join('')}</div></div>`;
+}
+let openN=[1,2,3,6].includes(store.get('cg_n'))?store.get('cg_n'):1;
+let LAST=[];
+const openLabel=c=>isFree(c)?'Відкрити безкоштовно':'Відкрити '+(openN>1?'×'+openN+' ':'')+'за '+fmt(c.p*openN);
+function qtyHTML(c){
+  return `<div class="qty"><span class="lb">Скільки відкрити:</span>${[1,2,3,6].map(k=>`<button class="${openN===k?'on':''}${S.bal<c.p*k?' cant':''}" onclick="setN(${k})">×${k}</button>`).join('')}</div>`;
+}
+function setN(k){if(spinning)return;openN=k;store.set('cg_n',k);renderCase();}
+function reelsHTML(list,n){
+  let h='';
+  for(let r=0;r<n;r++)h+=`<div class="vp"><div class="track">${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>tileHTML(list[(i+r*3)%list.length])).join('')}</div></div>`;
+  return h;
+}
+function navCount(){const b=$('#nav').querySelectorAll('button')[1];if(b)b.textContent='Інвентар ('+S.inv.length+')';}
+function tileHTML(i){
+  const c=getCase();const r=rar(i.v,c?c.p:100);
+  return `<div class="tile" style="--c:${rc(r)}"><div class="em">${esc(i.e)}</div><div class="tn">${esc(i.n)}</div><div class="tv">${fmt(i.v)}</div></div>`;
+}
+function pick(c){
+  const w=c.items.map(i=>wt(i.v,c.p));let t=w.reduce((a,b)=>a+b,0)*Math.random();
+  for(let k=0;k<w.length;k++){t-=w[k];if(t<=0)return c.items[k];}
+  return c.items[c.items.length-1];
+}
+function openCase(){
+  if(spinning)return;const c=getCase();
+  if(!c.items.length){toast('У кейсі ще немає речей');return;}
+  const free=isFree(c),n=free?1:openN,cost=c.p*n;
+  if(free){if(!stuck()){toast('Безкоштовний кейс доступний, коли немає за що купити навіть найдешевший кейс');return;}}
+  else if(S.bal<cost){toast(n>1?'Не вистачає монет: потрібно '+fmt(cost)+'. Продай речі, забери бонус або обери менше кейсів':'Не вистачає монет. Продай речі або забери бонус');return;}
+  S.bal-=cost;
+  /* речі видаємо одразу: якщо закрити додаток під час прокрутки, нічого не втрачається */
+  const wins=[],got=[];
+  for(let k=0;k<n;k++){
+    const w=pick(c);wins.push(w);
+    got.push({uid:Date.now()+'-'+Math.random().toString(36).slice(2),e:w.e,n:w.n,v:w.v,r:rar(w.v,c.p),from:c.n});
+  }
+  S.inv.unshift(...got);LAST=got;
+  saveState();updBal();spinning=true;
+  $('#openBtn').disabled=true;$('#res').classList.remove('show');
+  const reels=[...document.querySelectorAll('#reels .track')];
+  const WIN=40,N=50,vp=document.querySelector('#reels .vp').clientWidth;
+  reels.forEach((tr,idx)=>{
+    const strip=[];for(let k=0;k<N;k++)strip.push(k===WIN?wins[idx]:pick(c));
+    tr.style.transition='none';tr.style.transform='translateX(0)';
+    tr.innerHTML=strip.map(tileHTML).join('');
+  });
+  void document.body.offsetWidth;
+  reels.forEach((tr,idx)=>{
+    const tw=tr.firstElementChild.offsetWidth,step=tw+8;
+    const target=WIN*step+tw/2-vp/2+(Math.random()-.5)*tw*.5;
+    tr.style.transition='transform '+(5.5+idx*.25)+'s cubic-bezier(.12,.6,.1,1)';
+    tr.style.transform=`translateX(${-target}px)`;
+  });
+  setTimeout(()=>{
+    spinning=false;
+    const res=$('#res');if(!res)return;
+    showResult(c,got,res);
+    $('#openBtn').disabled=false;updBal();navCount();
+  },Math.round((5.5+(n-1)*.25)*1000)+200);
+}
+function showResult(c,got,res){
+  if(got.length===1){
+    const it=got[0];
+    res.style.setProperty('--c',rc(it.r));
+    res.innerHTML=`<div class="big">${esc(it.e)}</div><h2 style="margin:6px 0 2px">${esc(it.n)}</h2><div class="rn">${RN[it.r]}</div><div class="note">Вартість ${fmt(it.v)} монет. Річ уже в інвентарі.</div>
+      <div class="acts"><button class="btn" onclick="sell('${it.uid}',true)">Продати за ${fmt(it.v)}</button><button class="btn ghost" onclick="openCase()">Відкрити ще раз</button></div>`;
+  }else{
+    const tot=got.reduce((a,i)=>a+i.v,0),cost=c.p*got.length,diff=tot-cost;
+    const best=Math.max(...got.map(i=>i.r));
+    res.style.setProperty('--c',rc(best));
+    res.innerHTML=`<h2 style="margin:0 0 4px">Випало речей: ${got.length}</h2>
+      <div class="note">Разом ${fmt(tot)} монет. Кейси коштували ${fmt(cost)} (${diff>=0?'плюс ':'мінус '}${fmt(Math.abs(diff))}). Речі вже в інвентарі.</div>
+      <div class="resgrid">${[...got].sort((a,b)=>b.v-a.v).map(i=>`<div class="rcard" data-uid="${i.uid}" style="--c:${rc(i.r)}"><div class="em">${esc(i.e)}</div><b>${esc(i.n)}</b><span>${RN[i.r]} · ${fmt(i.v)}</span><button class="btn sm ghost" onclick="sellCard('${i.uid}')">Продати</button></div>`).join('')}</div>
+      <div class="acts"><button class="btn" id="sellBatch" onclick="sellBatch()"></button><button class="btn ghost" onclick="openCase()">Відкрити ще раз ×${got.length}</button></div>`;
+    refreshBatch();
+  }
+  res.classList.add('show');
+}
+function leftOf(){return LAST.filter(i=>S.inv.some(x=>x.uid===i.uid));}
+function refreshBatch(){
+  const b=$('#sellBatch');if(!b)return;
+  const l=leftOf(),t=l.reduce((a,i)=>a+i.v,0);
+  b.disabled=!l.length;b.textContent=l.length?'Продати все за '+fmt(t):'Усе продано';
+}
+function sellCard(uid){
+  const k=S.inv.findIndex(i=>i.uid===uid);if(k<0)return;
+  const it=S.inv.splice(k,1)[0];S.bal+=it.v;saveState();updBal();navCount();toast('Продано: +'+fmt(it.v));
+  const el=document.querySelector('.rcard[data-uid="'+uid+'"]');
+  if(el){el.classList.add('sold');const b=el.querySelector('button');if(b){b.disabled=true;b.textContent='Продано';}}
+  refreshBatch();
+}
+function sellBatch(){
+  const l=leftOf();if(!l.length)return;
+  let t=0;
+  l.forEach(i=>{const k=S.inv.findIndex(x=>x.uid===i.uid);if(k>=0){t+=S.inv[k].v;S.inv.splice(k,1);}});
+  S.bal+=t;saveState();updBal();navCount();toast('Продано: +'+fmt(t));
+  document.querySelectorAll('.rcard').forEach(el=>{el.classList.add('sold');const b=el.querySelector('button');if(b){b.disabled=true;b.textContent='Продано';}});
+  refreshBatch();
+}
+function sell(uid,fromRes){
+  const k=S.inv.findIndex(i=>i.uid===uid);if(k<0)return;
+  const it=S.inv.splice(k,1)[0];S.bal+=it.v;saveState();toast('Продано: +'+fmt(it.v));
+  if(fromRes){$('#res').classList.remove('show');updBal();navCount();}
+  else render();
+}
+
+/* ---------- Інвентар ---------- */
+function renderInv(){
+  if(!S.inv.length){$('#main').innerHTML=`<div class="empty">Інвентар порожній. Відкрий перший кейс.</div>`;return;}
+  const total=S.inv.reduce((a,i)=>a+i.v,0);
+  $('#main').innerHTML=`<div class="bonus"><span>Усього речей: ${S.inv.length}, на суму ${fmt(total)} монет</span><button class="btn sm" onclick="sellAll()">Продати все</button></div>
+  <div class="items">${S.inv.map(i=>`<div class="it" style="--c:${rc(i.r)}"><span class="em">${esc(i.e)}</span><div class="tx"><b>${esc(i.n)}</b><span>${RN[i.r]} · ${esc(i.from)}</span></div><button class="btn sm" onclick="sell('${i.uid}')">${fmt(i.v)}</button></div>`).join('')}</div>`;
+}
+function sellAll(){const t=S.inv.reduce((a,i)=>a+i.v,0);S.bal+=t;S.inv=[];saveState();toast('Продано все: +'+fmt(t));render();}
+
+
+
+/* ---------- Ім'я та профіль ---------- */
+function renderName(){
+  $('#nav').innerHTML='';
+  $('#main').innerHTML=`<div class="panel" style="max-width:420px;margin:30px auto"><h2>Як тебе звати?</h2><p class="note">Нікнейм побачить адміністратор гри.</p>
+    <div style="display:grid;gap:8px"><input id="nm" maxlength="20" placeholder="Нікнейм" onkeydown="if(event.key==='Enter')saveName('nm')"><button class="btn" onclick="saveName('nm')">Почати гру</button></div></div>`;
+}
+function saveName(id){
+  const v=$('#'+id).value.trim();
+  if(v.length<2)return toast('Нікнейм має бути від 2 символів');
+  S.name=v.slice(0,20);saveState();toast('Збережено');render();
+}
+function meStatus(){
+  const on=!!FB.uid&&!FB.err;
+  return `<div class="note">Зв'язок з сервером: <b style="color:${on?'var(--good)':'var(--bad)'}">${on?'є':'немає'}</b>${FB.uid?' · ID …'+esc(FB.uid.slice(-6)):''}</div>${FB.err?`<div class="note" style="color:var(--bad);margin-top:6px;overflow-wrap:anywhere">${esc(FB.err)}</div>`:''}`;
+}
+function refreshMe(){const el=$('#mestat');if(el)el.innerHTML=meStatus();setNet();}
+function renderMe(){
+  $('#main').innerHTML=`<div class="panel" style="max-width:480px"><h2>Профіль</h2>
+    <div class="row two"><input id="mn" maxlength="20" value="${esc(S.name)}"><button class="btn ghost" onclick="saveName('mn')">Змінити нікнейм</button></div>
+    <div id="mestat">${meStatus()}</div>
+    <p class="note">Прогрес зберігається на телефоні й копіюється на сервер. Якщо видалити додаток, прогрес на цьому пристрої втратиться.</p></div>`;
+}
+
+/* ---------- Адмін ---------- */
+function admInit(){
+  if(ADM.app||typeof firebase==='undefined')return;
+  try{
+    ADM.app=firebase.initializeApp(FBCFG,'admin');
+    ADM.auth=ADM.app.auth();ADM.db=ADM.app.firestore();
+    ADM.db.settings({experimentalAutoDetectLongPolling:true});
+    ADM.auth.onAuthStateChanged(u=>{if(u&&!u.isAnonymous)admVerify(u);else{adminOK=false;stopPlayers();if(view==='admin')render();}});
+  }catch(e){ADM.err=errText(e);}
+}
+async function admVerify(u){
+  ADM.busy=true;
+  try{
+    await ADM.db.collection('players').limit(1).get();
+    adminOK=true;ADM.email=u.email||'';ADM.err='';store.set('cg_isadmin',1);startPlayers();
+  }catch(e){
+    adminOK=false;
+    ADM.err=e&&e.code==='permission-denied'?'Цей акаунт не має прав адміна. Перевір пошту в правилах Firestore.':errText(e);
+    try{await ADM.auth.signOut();}catch(x){}
+  }
+  ADM.busy=false;if(view==='admin')render();
+}
+async function admLogin(){
+  admInit();if(!ADM.auth){toast('Firebase недоступний');return;}
+  const e=$('#ae').value.trim(),p=$('#ap').value;
+  if(!e||!p)return toast('Введи пошту і пароль');
+  ADM.err='';ADM.busy=true;render();
+  try{await ADM.auth.signInWithEmailAndPassword(e,p);}
+  catch(er){ADM.busy=false;ADM.err=/invalid-credential|wrong-password|user-not-found|invalid-login/.test(er.code||'')?'Неправильна пошта або пароль':errText(er);render();}
+}
+async function admLogout(){
+  try{await ADM.auth.signOut();}catch(e){}
+  adminOK=false;store.set('cg_isadmin',0);stopPlayers();render();
+}
+function startPlayers(){
+  stopPlayers();
+  ADM.unsub=ADM.db.collection('players').onSnapshot(snap=>{
+    ADM.players=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
+    if(view==='admin'&&adminOK&&ADM.tab==='players'){renderPList();renderPDetail();}
+  },e=>{ADM.err=errText(e);toast('Помилка списку гравців');});
+}
+function stopPlayers(){if(ADM.unsub){try{ADM.unsub();}catch(e){}ADM.unsub=null;}}
+function setAdmTab(t){ADM.tab=t;render();}
+
+function renderAdmin(){
+  admInit();
+  const m=$('#main');
+  if(!ADM.auth){m.innerHTML=`<div class="panel"><h2>Адмін</h2><p class="note">Firebase не завантажився. ${esc(ADM.err||FB.err)}</p></div>`;return;}
+  if(!adminOK){
+    m.innerHTML=`<div class="panel" style="max-width:420px"><h2>Вхід для адміна</h2>
+      <div style="display:grid;gap:8px"><input id="ae" type="email" placeholder="Пошта адміна" autocomplete="username"><input id="ap" type="password" placeholder="Пароль" autocomplete="current-password" onkeydown="if(event.key==='Enter')admLogin()"><button class="btn" onclick="admLogin()" ${ADM.busy?'disabled':''}>${ADM.busy?'Перевірка…':'Увійти'}</button></div>
+      ${ADM.err?`<p class="note" style="color:var(--bad);overflow-wrap:anywhere">${esc(ADM.err)}</p>`:''}</div>`;return;
+  }
+  m.innerHTML=`<div class="panel"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+    <div class="tabs2"><button class="btn sm ${ADM.tab==='players'?'':'ghost'}" onclick="setAdmTab('players')">Гравці</button><button class="btn sm ${ADM.tab==='cases'?'':'ghost'}" onclick="setAdmTab('cases')">Кейси</button></div>
+    <div class="note">${esc(ADM.email)} <button class="btn ghost sm" onclick="admLogout()">Вийти</button></div></div></div>`+
+    (ADM.tab==='players'
+      ?`<div class="cols"><div class="panel"><h3>Гравці (${ADM.players.length})</h3><input id="psearch" placeholder="Пошук за нікнеймом" oninput="renderPList()"><div id="plist"></div></div><div class="panel" id="pdet"></div></div>`
+      :casesAdminHTML());
+  if(ADM.tab==='players'){renderPList();renderPDetail(true);}
+}
+function renderPList(){
+  const el=$('#plist');if(!el)return;
+  const q=(($('#psearch')||{}).value||'').toLowerCase();
+  const list=ADM.players.filter(p=>!q||(p.name||'').toLowerCase().includes(q)).sort((a,b)=>ms(b)-ms(a));
+  el.innerHTML=list.length?list.map(p=>`<button class="plr${p.id===ADM.sel?' on':''}" onclick="selPlayer('${p.id}')"><b>${esc(p.name||'Без імені')}</b><span>${fmt(p.balance||0)} монет · ${p.invCount||0} речей · ${ago(ms(p))}</span></button>`).join(''):'<div class="empty">Гравців поки немає</div>';
+}
+function selPlayer(id){
+  ADM.sel=id;renderPList();renderPDetail(true);
+  const d=$('#pdet');if(d&&d.scrollIntoView)d.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderPDetail(force){
+  const el=$('#pdet');if(!el)return;
+  const ae=document.activeElement;
+  if(!force&&ae&&ae.tagName==='INPUT'&&el.contains(ae))return;
+  const p=ADM.players.find(x=>x.id===ADM.sel);
+  if(!p){el.innerHTML='<div class="empty">Вибери гравця зі списку</div>';return;}
+  let inv=[];try{inv=JSON.parse(p.inv||'[]');}catch(e){}
+  el.innerHTML=`<h3>${esc(p.name||'Без імені')}</h3><div class="note">ID …${esc(p.id.slice(-6))} · був ${ago(ms(p))}</div>
+    <div class="bigbal">${fmt(p.balance||0)} монет</div>
+    <div class="row two"><input id="bv" type="number" min="0" placeholder="Сума"><button class="btn" onclick="admBal('set')">Встановити</button></div>
+    <div class="acts" style="justify-content:flex-start;margin:0 0 6px"><button class="btn sm ghost" onclick="admBal('add')">+ Додати</button><button class="btn sm ghost" onclick="admBal('sub')">− Забрати</button></div>
+    <h3 style="margin-top:14px">Інвентар (${inv.length})</h3>
+    <div style="display:grid;gap:8px">${inv.slice(0,100).map(i=>`<div class="it" style="--c:${rc(i.r||0)}"><span class="em">${esc(i.e)}</span><div class="tx"><b>${esc(i.n)}</b><span>${fmt(i.v)} монет</span></div><button class="btn danger sm" onclick="admRemoveItem('${esc(i.uid)}')">Забрати</button></div>`).join('')||'<div class="empty">Порожньо</div>'}</div>
+    ${inv.length>100?'<p class="note">Показано перші 100 речей.</p>':''}
+    ${inv.length?'<button class="btn danger sm" style="margin-top:10px" onclick="admClearInv()">Очистити інвентар</button>':''}`;
+}
+async function admTx(uid,fn){
+  if(!uid||!ADM.db)return;
+  const ref=ADM.db.doc('players/'+uid);
+  try{
+    await ADM.db.runTransaction(async tx=>{
+      const s=await tx.get(ref);if(!s.exists)return;
+      const d=s.data();const patch=fn(d);
+      tx.update(ref,Object.assign({},patch,{adminRev:(d.adminRev||0)+1}));
+    });
+    toast('Збережено');
+  }catch(e){toast('Помилка: '+errText(e));}
+}
+const invPatch=inv=>({inv:JSON.stringify(inv),invCount:inv.length,invValue:inv.reduce((a,i)=>a+(i.v||0),0)});
+function admBal(mode){
+  const raw=$('#bv').value;if(raw==='')return toast('Введи суму');
+  const v=Math.round(Number(raw));if(!(v>=0))return toast('Сума має бути від 0');
+  $('#bv').value='';
+  admTx(ADM.sel,d=>{const b=Number(d.balance)||0;return {balance:mode==='set'?v:mode==='add'?b+v:Math.max(0,b-v)};});
+}
+function admRemoveItem(id){
+  admTx(ADM.sel,d=>{let inv=[];try{inv=JSON.parse(d.inv||'[]');}catch(e){}return invPatch(inv.filter(i=>i.uid!==id));});
+}
+function admClearInv(){admTx(ADM.sel,()=>invPatch([]));}
+async function pushCatalog(){
+  if(!ADM.db)return;
+  try{await ADM.db.doc('config/catalog').set({json:JSON.stringify(CASES),v:Date.now(),cv:4});toast('Кейси відправлено гравцям');}
+  catch(e){toast('Не вдалося відправити кейси: '+errText(e));}
+}
+function casesAdminHTML(){
+  if(!adminCase||!CASES.find(c=>c.id===adminCase))adminCase=CASES[0]?CASES[0].id:null;
+  const c=CASES.find(x=>x.id===adminCase);
+  return `<div class="cols">
+    <div class="panel"><h3>Речі в кейсі</h3>
+      <select id="sel" onchange="adminCase=this.value;render()">${CASES.map(x=>`<option value="${x.id}" ${x.id===adminCase?'selected':''}>${esc(x.e)} ${esc(x.n)} (${x.items.length})</option>`).join('')}</select>
+      <div style="margin-top:12px;display:grid;gap:8px">${c?c.items.map((i,k)=>`<div class="it" style="--c:${rc(rar(i.v,c.p))}"><span class="em">${esc(i.e)}</span><div class="tx"><b>${esc(i.n)}</b><span>${fmt(i.v)} монет · ${RN[rar(i.v,c.p)]}</span></div><button class="btn danger sm" onclick="delItem(${k})">Видалити</button></div>`).join('')||'<div class="empty">Кейс порожній</div>':'<div class="empty">Немає кейсів</div>'}</div>
+      ${c?`<button class="btn danger sm" style="margin-top:12px" onclick="delCase()">Видалити весь кейс</button>`:''}
+    </div>
+    <div>
+      <div class="panel"><h3>Додати річ у вибраний кейс</h3>
+        <div class="row"><input id="ie" placeholder="🎁" maxlength="4"><input id="in" placeholder="Назва речі"><input id="iv" type="number" min="1" placeholder="Ціна"></div>
+        <button class="btn" onclick="addItem()">Додати річ</button>
+        <p class="note">Рідкість залежить від ціни відносно ціни кейсу: що дорожча річ, то рідше випадає.</p></div>
+      <div class="panel"><h3>Новий кейс</h3>
+        <div class="row"><input id="ce" placeholder="📦" maxlength="4"><input id="cn" placeholder="Назва кейсу"><input id="cp" type="number" min="1" placeholder="Ціна"></div>
+        <button class="btn" onclick="addCase()">Створити кейс</button></div>
+      <div class="panel"><h3>Для всіх гравців</h3>
+        <p class="note">Зміни кейсів автоматично відправляються гравцям. Якщо щойно почав, натисни кнопку, щоб відправити поточні кейси.</p>
+        <div class="acts" style="justify-content:flex-start"><button class="btn" onclick="pushCatalog()">Відправити кейси гравцям</button>
+        <button class="btn ${resetArmed?'danger':'ghost'}" onclick="resetCat()">${resetArmed?'Точно скинути всі кейси?':'Повернути 40 стандартних кейсів'}</button></div></div>
+    </div>
+  </div>`;
+}
+function addItem(){
+  if(!adminOK)return;const c=CASES.find(x=>x.id===adminCase);if(!c)return;
+  const n=$('#in').value.trim(),v=Math.round(Number($('#iv').value)),e=$('#ie').value.trim()||'🎁';
+  if(!n)return toast('Введи назву речі');
+  if(!(v>0))return toast('Введи ціну більше нуля');
+  c.items.push({e,n,v});saveCases();toast('Річ додано');render();
+}
+function delItem(k){
+  if(!adminOK)return;const c=CASES.find(x=>x.id===adminCase);if(!c)return;
+  c.items.splice(k,1);saveCases();render();
+}
+function addCase(){
+  if(!adminOK)return;
+  const n=$('#cn').value.trim(),p=Math.round(Number($('#cp').value)),e=$('#ce').value.trim()||'📦';
+  if(!n)return toast('Введи назву кейсу');
+  if(!(p>0))return toast('Введи ціну кейсу');
+  const id='c'+Date.now();CASES.push({id,n,e,p,items:[]});adminCase=id;saveCases();toast('Кейс створено. Додай у нього речі');render();
+}
+function delCase(){
+  if(!adminOK)return;CASES=CASES.filter(c=>c.id!==adminCase);adminCase=null;saveCases();render();
+}
+function resetCat(){
+  if(!adminOK)return;
+  if(!resetArmed){resetArmed=true;render();return;}
+  CASES=defaults();adminCase=null;resetArmed=false;saveCases();toast('Кейси скинуто');render();
+}
+
+
+render();
+fbInit();
+if(store.get('cg_isadmin'))admInit();
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pushState();});
+
+</script>
+</body>
+</html>
