@@ -216,13 +216,13 @@ function ico(i,cn){const p=IMGS[(cn||i.from||'')+'|'+i.n];return p?`<img class="
 const RN=['Звичайна','Незвичайна','Рідкісна','Епічна','Легендарна'];
 const WA=1.6;
 const rar=(v,p)=>{const r=v/(p>0?p:100);return r<.95?0:r<1.5?1:r<4?2:r<10?3:4;};
-/* Точні шанси за рідкістю: епічна 6%, легендарна 1.5%. Решта ділиться між звичайними, незвичайними і рідкісними пропорційно до їхніх вагів. */
-const TARGET=[null,null,null,.06,.015];
+/* Шанс КОЖНОЇ речі: епічна 5%, легендарна 1.5%. Решта ділиться між звичайними, незвичайними і рідкісними пропорційно до їхніх вагів. */
+const PER=[null,null,null,.05,.015];
 function wts(c){
   const w=c.items.map(i=>Math.pow(Math.min(Math.max(i.v/(c.p>0?c.p:100),.2),50),-WA));
-  const rr=c.items.map(i=>rar(i.v,c.p));const T=[0,0,0,0,0];w.forEach((x,k)=>T[rr[k]]+=x);
-  let fixed=0,rest=0;for(let r=0;r<5;r++){if(TARGET[r]!=null&&T[r]>0)fixed+=TARGET[r];else rest+=T[r];}
-  return w.map((x,k)=>{const r=rr[k];if(TARGET[r]!=null&&T[r]>0)return x/T[r]*TARGET[r];return rest>0?x/rest*(1-fixed):0;});
+  const rr=c.items.map(i=>rar(i.v,c.p));
+  let fixed=0,rest=0;w.forEach((x,k)=>{if(PER[rr[k]]!=null)fixed+=PER[rr[k]];else rest+=x;});
+  return w.map((x,k)=>PER[rr[k]]!=null?PER[rr[k]]:(rest>0?x/rest*(1-fixed):0));
 }
 
 function defaults(){
