@@ -170,7 +170,7 @@ const RAW=[
 {n:'Ноутбуки',e:'💻',p:1900000,i:['💻|Старий нетбук','💻|Chromebook','💻|Lenovo IdeaPad','💻|Acer Aspire','💻|HP Pavilion','💻|Huawei MateBook','💻|ASUS Zenbook','💻|Microsoft Surface Laptop','💻|MacBook Air M2','💻|Lenovo ThinkPad X1','💻|Dell XPS 15','💻|MacBook Air M3','💻|MacBook Pro M3','💻|Razer Blade 16','🖥️|Ігровий ASUS ROG','🖥️|MacBook Pro M4 Max']},
 {n:'Кросівки',e:'👟',p:5900,i:['🩴|Шльопанці','👟|Дешеві кеди','👟|Класичні кеди','👟|Puma Smash','👟|Adidas Gazelle','👟|Reebok Classic','👟|New Balance 574','👟|Converse Chuck 70','👟|Nike Air Force 1','👟|Nike Air Max 90','👟|Air Jordan 1','👟|Adidas Samba OG','👟|Yeezy Boost','👟|Off-White x Nike','👟|Лімітовані Nike Dunk','👟|Air Jordan 1 Chicago 1985']},
 {n:'Одяг',e:'👕',p:930,i:['🧦|Шкарпетки','🧣|Шарф','👕|Футболка','👔|Сорочка','👖|Джинси','🧥|Светр','🧥|Толстовка','🧥|Вітровка','🧥|Демісезонна куртка','🧥|Бомбер','🧥|Пуховик','🧥|Тренч Burberry','🧥|Шкіряна куртка','🧥|Дублянка','🧥|Пальто з кашеміру','🧥|Шуба з соболя']},
-{n:'Годинники',e:'⌚',p:33000,i:['⌚|Дитячий годинник','⌚|Електронний Casio','⌚|Swatch','⌚|Xiaomi Band','⌚|Fossil Gen','⌚|Seiko 5','⌚|Apple Watch SE','⌚|Citizen Eco-Drive','⌚|Garmin Fenix','⌚|Tissot PRX','⌚|Apple Watch Ultra','⌚|Omega Seamaster','⌚|Rolex Submariner','⌚|Audemars Piguet','⌚|Patek Philippe Nautilus','⌚|Richard Mille']},
+{n:'Годинники',e:'⌚',p:33000,b:16500,i:['⌚|Дитячий годинник','⌚|Електронний Casio','⌚|Swatch','⌚|Xiaomi Band','⌚|Fossil Gen','⌚|Seiko 5','⌚|Apple Watch SE','⌚|Citizen Eco-Drive','⌚|Garmin Fenix','⌚|Tissot PRX','⌚|Apple Watch Ultra','⌚|Omega Seamaster','⌚|Rolex Submariner','⌚|Audemars Piguet','⌚|Patek Philippe Nautilus','⌚|Richard Mille']},
 {n:'Навушники',e:'🎧',p:480,i:['🎧|Дротові вкладиші','🎧|Навушники з кабелем','🎧|JBL Tune 510','🎧|Redmi Buds','🎧|Xiaomi Buds 4','🎧|Anker Soundcore','🎧|Sony WH-CH720','🎧|Samsung Galaxy Buds','🎧|AirPods Pro 2','🎧|Sony WH-1000XM5','🎧|Bose QC Ultra','🎧|Beats Studio Pro','🎧|AirPods Max','🎧|Focal Bathys','🎧|Sennheiser HD 800 S','🎧|Sennheiser Orpheus']},
 {n:'Консолі',e:'🎮',p:230000,i:['🕹️|Джойстик','🕹️|Геймпад','🎮|Retro Mini','🎮|Game Boy Color','🎮|Nintendo Switch Lite','🎮|PlayStation 4','🎮|Xbox Series S','🎮|Xbox One X','🎮|PlayStation 5 Digital','🎮|Nintendo Switch OLED','🎮|PlayStation 5 Pro','🎮|ASUS ROG Ally','🎮|Steam Deck + ігри','🎮|Колекційна PS5 Limited','🎮|Ігровий ПК з RTX 4090','🎮|Прототип PlayStation']},
 {n:'Кухня',e:'☕',p:1300,i:['☕|Турка','🍴|Набір ложок','🫖|Чайник','🍳|Сковорідка','🥤|Блендер','🥣|Тостер','🍲|Мультиварка','🍚|Рисоварка','☕|Кавоварка','🍞|Хлібопіч','🍟|Аерофритюрниця','🍽️|Посудомийка','🍳|Кухонний комбайн','🥩|Су-від набір','☕|Кавомашина De\'Longhi','🍳|Кухня Smeg']},
@@ -215,18 +215,25 @@ RAW.forEach(c=>{const s=IMGSLUG[c.n];if(s)c.i.forEach((x,k)=>{IMGS[c.n+'|'+x.spl
 function ico(i,cn){const p=IMGS[(cn||i.from||'')+'|'+i.n];return p?`<img class="ii" src="${p}" alt="" decoding="async" draggable="false">`:esc(i.e);}
 const RN=['Звичайна','Незвичайна','Рідкісна','Епічна','Легендарна'];
 const WA=1.6;
+const rb=c=>c&&c.b>0?c.b:(c&&c.p>0?c.p:100);/* база для рідкості й вартості речей (якщо не задана, дорівнює ціні кейсу) */
 const rar=(v,p)=>{const r=v/(p>0?p:100);return r<.95?0:r<1.5?1:r<4?2:r<10?3:4;};
 /* Шанс КОЖНОЇ речі: епічна 5%, легендарна 1.5%. Решта ділиться між звичайними, незвичайними і рідкісними пропорційно до їхніх вагів. */
 const PER=[null,null,null,.05,.015];
 function wts(c){
-  const w=c.items.map(i=>Math.pow(Math.min(Math.max(i.v/(c.p>0?c.p:100),.2),50),-WA));
-  const rr=c.items.map(i=>rar(i.v,c.p));
+  const w=c.items.map(i=>Math.pow(Math.min(Math.max(i.v/rb(c),.2),50),-WA));
+  const rr=c.items.map(i=>rar(i.v,rb(c)));
   let fixed=0,rest=0;w.forEach((x,k)=>{if(PER[rr[k]]!=null)fixed+=PER[rr[k]];else rest+=x;});
   return w.map((x,k)=>PER[rr[k]]!=null?PER[rr[k]]:(rest>0?x/rest*(1-fixed):0));
 }
 
 function defaults(){
-  return RAW.map((c,ci)=>{const base=c.p>0?c.p:100;return {id:'c'+ci,n:c.n,e:c.e,p:c.p,free:c.f?1:0,items:c.i.map((s,k)=>{const [e,n]=s.split('|');return {e,n,v:r2(base*M[k])};})};});
+  return RAW.map((c,ci)=>{const base=c.b||(c.p>0?c.p:100);return {id:'c'+ci,n:c.n,e:c.e,p:c.p,b:c.b||0,free:c.f?1:0,items:c.i.map((s,k)=>{const [e,n]=s.split('|');return {e,n,v:r2(base*M[k])};})};});
+}
+function applyFix(arr){/* підтягує нові вартості для кейсів із власною базою (Годинники), навіть якщо в гравця чи на сервері лежить старий каталог */
+  const D=defaults();
+  (arr||[]).forEach(c=>{const d=D.find(x=>x.id===c.id);
+    if(d&&d.b&&!c.b){c.b=d.b;c.items.forEach(it=>{const m=d.items.find(x=>x.n===it.n);if(m)it.v=m.v;});}});
+  return arr;
 }
 
 /* ---------- Firebase ---------- */
@@ -241,7 +248,7 @@ const store={
   get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):(mem[k]??null);}catch(e){return mem[k]??null;}},
   set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 };
-let CASES=store.get('cg_cases')||defaults();
+let CASES=applyFix(store.get('cg_cases')||defaults());
 function upgradeValues(arr){
   const D=defaults();
   arr.forEach(c=>{const d=D.find(x=>x.id===c.id);if(!d)return;
@@ -256,6 +263,7 @@ function upgradeValues(arr){
   else{CASES.forEach(c=>{const d=D.find(x=>x.id===c.id);if(d){c.p=d.p;c.free=d.free;}});upgradeValues(CASES);}
   store.set('cg_cases',CASES);store.set('cg_ver',5);
 })();
+store.set('cg_cases',CASES);
 let S=store.get('cg_state')||{bal:1000,inv:[],bonusAt:0};
 S.name=S.name||'';S.adminRev=S.adminRev||0;
 S.ck=S.ck||{pow:1,auto:0,at:Date.now()};S.rbh=S.rbh||[];S.mn=S.mn||null;
@@ -296,14 +304,39 @@ function onOnline(){
   FB.db.doc('config/catalog').onSnapshot(snap=>{
     if(!snap.exists)return;
     try{const dd=snap.data();const arr=JSON.parse(dd.json);if((dd.cv||1)<5)return;
-      if(Array.isArray(arr)&&arr.length){CASES=arr;store.set('cg_cases',CASES);if(!spinning&&view==='shop')render();}
+      if(Array.isArray(arr)&&arr.length){CASES=applyFix(arr);store.set('cg_cases',CASES);if(!spinning&&view==='shop')render();}
     }catch(e){}
   },e=>{FB.err=errText(e);refreshMe();});
   FB.db.doc('players/'+FB.uid).onSnapshot(snap=>{
-    if(!snap.exists)return;const d=snap.data();
+    if(!snap.exists){if(FB.had)onDeleted();return;}
+    FB.had=true;const d=snap.data();
     if((d.adminRev||0)>(S.adminRev||0))applyAdmin(d);
+    checkMod(d);
   },e=>{FB.err=errText(e);refreshMe();});
   pushState();
+}
+const MOD={kind:'',until:0,tm:null};
+function modEl(){let e=document.getElementById('mod');if(!e){e=document.createElement('div');e.id='mod';e.style.cssText='position:fixed;inset:0;z-index:200;background:var(--bg);color:var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px';document.body.appendChild(e);}return e;}
+function hideMod(){const e=document.getElementById('mod');if(e)e.remove();clearInterval(MOD.tm);MOD.kind='';}
+function showMod(kind){
+  if(kind==='ban'&&MOD.kind==='ban')return;
+  const e=modEl();MOD.kind=kind;clearInterval(MOD.tm);
+  if(kind==='kick'){e.innerHTML='<div><div style="font-size:54px">🚪</div><h2>Вас виключено з гри</h2><p class="note">Адмін завершив вашу поточну сесію.</p><button class="btn" onclick="location.reload()">Повернутися в гру</button></div>';return;}
+  e.innerHTML='<div><div style="font-size:54px">⛔</div><h2>Тайм-аут</h2><p class="note">Адмін тимчасово обмежив вам доступ до гри.</p><div class="bigbal" id="modt"></div></div>';
+  const tick=()=>{const left=MOD.until-Date.now();if(left<=0){hideMod();return;}const s=Math.ceil(left/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;const el=document.getElementById('modt');if(el)el.textContent=(h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(c).padStart(2,'0');};
+  tick();MOD.tm=setInterval(tick,1000);
+}
+function checkMod(d){
+  const kr=Number(d.kickRev)||0;
+  if(S.kickRev===undefined){S.kickRev=kr;store.set('cg_state',S);}
+  else if(kr>S.kickRev){S.kickRev=kr;store.set('cg_state',S);showMod('kick');}
+  MOD.until=Number(d.banUntil)||0;
+  if(MOD.until>Date.now())showMod('ban');else if(MOD.kind==='ban')hideMod();
+}
+function onDeleted(){
+  FB.had=false;hideMod();
+  S={bal:1000,inv:[],bonusAt:0,name:'',adminRev:0,ck:{pow:1,auto:0,at:Date.now()},rbh:[],mn:null};
+  store.set('cg_state',S);spinning=false;view='shop';render();toast('Ваш акаунт видалено адміном');
 }
 function applyAdmin(d){
   S.bal=Number(d.balance)||0;
@@ -312,9 +345,9 @@ function applyAdmin(d){
   if(!spinning)render();toast('Адмін оновив ваш рахунок');
 }
 let pushT=null;
-function schedulePush(t){if(!FB.uid)return;clearTimeout(pushT);pushT=setTimeout(pushState,t||1200);}
+function schedulePush(t){if(!FB.uid||pushT)return;pushT=setTimeout(()=>{pushT=null;pushState();},t||1200);}
 async function pushState(){
-  if(!FB.uid||!FB.db||!S.name)return;clearTimeout(pushT);
+  if(!FB.uid||!FB.db||!S.name)return;clearTimeout(pushT);pushT=null;
   const ref=FB.db.doc('players/'+FB.uid);let adminData=null;
   try{
     await FB.db.runTransaction(async tx=>{
@@ -368,7 +401,7 @@ function getBonus(){if(S.bonusAt>Date.now())return;S.bal+=300;S.bonusAt=Date.now
 const getCase=()=>CASES.find(c=>c.id===curId);
 function chances(c){
   const w=wts(c),tot=w.reduce((a,b)=>a+b,0)||1;
-  return c.items.map((i,k)=>({...i,r:rar(i.v,c.p),pc:w[k]/tot*100})).sort((a,b)=>b.v-a.v);
+  return c.items.map((i,k)=>({...i,r:rar(i.v,rb(c)),pc:w[k]/tot*100})).sort((a,b)=>b.v-a.v);
 }
 function renderCase(){
   const c=getCase();if(!c){go('shop');return;}
@@ -399,7 +432,7 @@ function reelsHTML(list,n){
 }
 function navCount(){const b=$('#nav').querySelectorAll('button')[1];if(b)b.textContent='Інвентар ('+S.inv.length+')';}
 function tileHTML(i){
-  const c=getCase();const r=rar(i.v,c?c.p:100);
+  const c=getCase();const r=rar(i.v,rb(c));
   return `<div class="tile" style="--c:${rc(r)}"><div class="em">${ico(i,c?c.n:'')}</div><div class="tn">${esc(i.n)}</div><div class="tv">${fmt(i.v)}</div></div>`;
 }
 function pick(c){
@@ -418,7 +451,7 @@ function openCase(){
   const wins=[],got=[];
   for(let k=0;k<n;k++){
     const w=pick(c);wins.push(w);
-    got.push({uid:Date.now()+'-'+Math.random().toString(36).slice(2),e:w.e,n:w.n,v:w.v,r:rar(w.v,c.p),from:c.n});
+    got.push({uid:Date.now()+'-'+Math.random().toString(36).slice(2),e:w.e,n:w.n,v:w.v,r:rar(w.v,rb(c)),from:c.n});
   }
   S.inv.unshift(...got);LAST=got;
   saveState();updBal();spinning=true;
@@ -581,7 +614,7 @@ function renderAdmin(){
     <div class="tabs2"><button class="btn sm ${ADM.tab==='players'?'':'ghost'}" onclick="setAdmTab('players')">Гравці</button><button class="btn sm ${ADM.tab==='cases'?'':'ghost'}" onclick="setAdmTab('cases')">Кейси</button></div>
     <div class="note">${esc(ADM.email)} <button class="btn ghost sm" onclick="admLogout()">Вийти</button></div></div></div>`+
     (ADM.tab==='players'
-      ?`<div class="cols"><div class="panel"><h3>Гравці (${ADM.players.length})</h3><input id="psearch" placeholder="Пошук за нікнеймом" oninput="renderPList()"><div id="plist"></div></div><div class="panel" id="pdet"></div></div>`
+      ?`<div class="cols"><div class="panel"><h3>Гравці (${ADM.players.length})</h3><input id="psearch" placeholder="Пошук за нікнеймом" oninput="renderPList()"><div id="pbulk"></div><div id="plist"></div></div><div class="panel" id="pdet"></div></div>`
       :casesAdminHTML());
   if(ADM.tab==='players'){renderPList();renderPDetail(true);}
 }
@@ -589,7 +622,9 @@ function renderPList(){
   const el=$('#plist');if(!el)return;
   const q=(($('#psearch')||{}).value||'').toLowerCase();
   const list=ADM.players.filter(p=>!q||(p.name||'').toLowerCase().includes(q)).sort((a,b)=>ms(b)-ms(a));
-  el.innerHTML=list.length?list.map(p=>`<button class="plr${p.id===ADM.sel?' on':''}" onclick="selPlayer('${p.id}')"><b>${esc(p.name||'Без імені')}</b><span>${fmt(p.balance||0)} монет · ${p.invCount||0} речей · ${ago(ms(p))}</span></button>`).join(''):'<div class="empty">Гравців поки немає</div>';
+  const sp=staleP(),pb=$('#pbulk');
+  if(pb)pb.innerHTML=sp.length?`<button class="btn danger sm" style="margin:8px 0" onclick="admPurge()">${ADM.purgeArm?'Точно? Видалити '+sp.length+' акаунтів':'Видалити неактивних 7+ днів ('+sp.length+')'}</button>`:'';
+  el.innerHTML=list.length?list.map(p=>`<button class="plr${p.id===ADM.sel?' on':''}" onclick="selPlayer('${p.id}')"><b>${esc(p.name||'Без імені')}${Number(p.banUntil)>Date.now()?' ⛔':''}</b><span>${fmt(p.balance||0)} монет · ${p.invCount||0} речей · ${ago(ms(p))}</span></button>`).join(''):'<div class="empty">Гравців поки немає</div>';
 }
 function selPlayer(id){
   ADM.sel=id;renderPList();renderPDetail(true);
@@ -609,7 +644,44 @@ function renderPDetail(force){
     <h3 style="margin-top:14px">Інвентар (${inv.length})</h3>
     <div style="display:grid;gap:8px">${inv.slice(0,100).map(i=>`<div class="it" style="--c:${rc(i.r||0)}"><span class="em">${ico(i)}</span><div class="tx"><b>${esc(i.n)}</b><span>${fmt(i.v)} монет</span></div><button class="btn danger sm" onclick="admRemoveItem('${esc(i.uid)}')">Забрати</button></div>`).join('')||'<div class="empty">Порожньо</div>'}</div>
     ${inv.length>100?'<p class="note">Показано перші 100 речей.</p>':''}
-    ${inv.length?'<button class="btn danger sm" style="margin-top:10px" onclick="admClearInv()">Очистити інвентар</button>':''}`;
+    ${inv.length?'<button class="btn danger sm" style="margin-top:10px" onclick="admClearInv()">Очистити інвентар</button>':''}
+    ${admAcctHTML(p)}`;
+}
+function admAcctHTML(p){
+  const ban=Number(p.banUntil)||0,on=ban>Date.now();
+  return `<h3 style="margin-top:16px">Керування акаунтом</h3>
+    ${on?`<div class="note" style="color:var(--bad)">⛔ Тайм-аут до ${esc(new Date(ban).toLocaleString('uk-UA'))}</div>`:''}
+    <div class="acts" style="justify-content:flex-start;margin:6px 0"><button class="btn sm ghost" onclick="admKick()">Кікнути з гри</button>${on?'<button class="btn sm ghost" onclick="admBan(0)">Зняти тайм-аут</button>':''}</div>
+    <div class="note">Тайм-аут:</div>
+    <div class="acts" style="justify-content:flex-start;margin:4px 0"><button class="btn sm ghost" onclick="admBan(5)">5 хв</button><button class="btn sm ghost" onclick="admBan(30)">30 хв</button><button class="btn sm ghost" onclick="admBan(60)">1 год</button><button class="btn sm ghost" onclick="admBan(1440)">24 год</button></div>
+    <button class="btn danger sm" style="margin-top:12px" onclick="admDelete()">${ADM.delArm===p.id?'Точно видалити? Натисни ще раз':'Видалити акаунт'}</button>`;
+}
+async function admField(uid,patch,msg){
+  if(!uid||!ADM.db)return;
+  try{await ADM.db.doc('players/'+uid).update(patch);toast(msg);}
+  catch(e){toast('Помилка: '+errText(e));}
+}
+function admKick(){admField(ADM.sel,{kickRev:firebase.firestore.FieldValue.increment(1)},'Гравця кікнуто');}
+function admBan(min){admField(ADM.sel,{banUntil:min>0?Date.now()+min*60000:0},min>0?'Тайм-аут видано':'Тайм-аут знято');}
+async function admDelete(){
+  const id=ADM.sel;if(!id||!ADM.db)return;
+  if(ADM.delArm!==id){ADM.delArm=id;renderPDetail(true);setTimeout(()=>{if(ADM.delArm===id){ADM.delArm=null;renderPDetail(true);}},4000);return;}
+  ADM.delArm=null;
+  try{await ADM.db.doc('players/'+id).delete();ADM.sel=null;toast('Акаунт видалено');}
+  catch(e){toast('Помилка: '+errText(e));}
+  renderPList();renderPDetail(true);
+}
+const staleP=()=>{const lim=Date.now()-7*864e5;return ADM.players.filter(p=>ms(p)<lim);};
+async function admPurge(){
+  const list=staleP();if(!list.length)return;
+  if(!ADM.purgeArm){ADM.purgeArm=true;renderPList();setTimeout(()=>{ADM.purgeArm=false;renderPList();},4000);return;}
+  ADM.purgeArm=false;
+  try{
+    for(let i=0;i<list.length;i+=400){const b=ADM.db.batch();list.slice(i,i+400).forEach(p=>b.delete(ADM.db.doc('players/'+p.id)));await b.commit();}
+    if(list.some(p=>p.id===ADM.sel))ADM.sel=null;
+    toast('Видалено акаунтів: '+list.length);
+  }catch(e){toast('Помилка: '+errText(e));}
+  renderPList();renderPDetail(true);
 }
 async function admTx(uid,fn){
   if(!uid||!ADM.db)return;
@@ -645,7 +717,7 @@ function casesAdminHTML(){
   return `<div class="cols">
     <div class="panel"><h3>Речі в кейсі</h3>
       <select id="sel" onchange="adminCase=this.value;render()">${CASES.map(x=>`<option value="${x.id}" ${x.id===adminCase?'selected':''}>${esc(x.e)} ${esc(x.n)} (${x.items.length})</option>`).join('')}</select>
-      <div style="margin-top:12px;display:grid;gap:8px">${c?c.items.map((i,k)=>`<div class="it" style="--c:${rc(rar(i.v,c.p))}"><span class="em">${ico(i,c.n)}</span><div class="tx"><b>${esc(i.n)}</b><span>${fmt(i.v)} монет · ${RN[rar(i.v,c.p)]}</span></div><button class="btn danger sm" onclick="delItem(${k})">Видалити</button></div>`).join('')||'<div class="empty">Кейс порожній</div>':'<div class="empty">Немає кейсів</div>'}</div>
+      <div style="margin-top:12px;display:grid;gap:8px">${c?c.items.map((i,k)=>`<div class="it" style="--c:${rc(rar(i.v,rb(c)))}"><span class="em">${ico(i,c.n)}</span><div class="tx"><b>${esc(i.n)}</b><span>${fmt(i.v)} монет · ${RN[rar(i.v,rb(c))]}</span></div><button class="btn danger sm" onclick="delItem(${k})">Видалити</button></div>`).join('')||'<div class="empty">Кейс порожній</div>':'<div class="empty">Немає кейсів</div>'}</div>
       ${c?`<button class="btn danger sm" style="margin-top:12px" onclick="delCase()">Видалити весь кейс</button>`:''}
     </div>
     <div>
@@ -697,7 +769,8 @@ const GAMES=[
  ['click','👆','Клікер','Тицяй на монету, купуй покращення'],
  ['rb','🎡','Червоне / Чорне','Рулетка, зелене платить ×14'],
  ['coin','🪙','Монетка','Орел чи решка, виграш ×1.9'],
- ['mines','💣','Міни','Відкривай клітинки й не підірвись']
+ ['mines','💣','Міни','Відкривай клітинки й не підірвись'],
+ ['rocket','🚀','Ракета','Злітає вгору, забери виграш до вибуху, до ×15']
 ];
 let BET=Math.max(1,Math.floor(Number(store.get('cg_bet'))||100));
 const backG=()=>`<button class="back" onclick="go('games')">← До міні-ігор</button>`;
@@ -735,6 +808,7 @@ function renderGame(){
   else if(g==='rb')renderRB();
   else if(g==='coin')renderCoin();
   else if(g==='mines')renderMines();
+  else if(g==='rocket')renderRocket();
   else{view='games';renderGames();}
 }
 
@@ -743,7 +817,7 @@ let upSel=new Set(),upMult=2,upLast=null;
 const UP_M=[1.5,2,3,5,10,25,100];
 function allTargets(){
   const m=new Map();
-  CASES.forEach(c=>c.items.forEach(i=>{m.set(c.n+'|'+i.n,{e:i.e,n:i.n,v:i.v,from:c.n,cp:c.p});}));
+  CASES.forEach(c=>c.items.forEach(i=>{m.set(c.n+'|'+i.n,{e:i.e,n:i.n,v:i.v,from:c.n,cp:rb(c)});}));
   return [...m.values()];
 }
 function upTarget(sum,mult){
@@ -828,7 +902,7 @@ function doUpgrade(){
 
 /* ===== Клікер ===== */
 let ckT=null;
-function ckSaveSoon(){clearTimeout(ckT);ckT=setTimeout(saveState,700);}
+function ckSaveSoon(){clearTimeout(ckT);ckT=setTimeout(()=>{store.set('cg_state',S);schedulePush(8000);},700);}
 function ckAccrue(){
   const k=S.ck,now=Date.now();
   let secs=Math.floor((now-k.at)/1000);
@@ -947,6 +1021,75 @@ function playCoin(pick){
     g.className='gres '+(win?'win':'lose');
     g.textContent=(side?'Решка. ':'Орел. ')+(win?`Виграш +${fmt(payout-b)}`:`Програш −${fmt(b)}`);
   },2100);
+}
+
+/* ===== Ракета ===== */
+const RK={on:false,bet:0,crash:1,t0:0,raf:0,m:1,k:1,pts:[]};
+const rkM=t=>Math.exp(.18*t);/* множник росте від ×1 до ×15 приблизно за 15 секунд */
+function rkPos(m){const f=Math.log(Math.max(m,1))/Math.log(15);return {x:7+84*f,y:9+74*Math.pow(f,RK.k)};}
+function rkHist(){return (S.rkh||[]).slice(-14).map(x=>`<span style="padding:3px 8px;border-radius:8px;background:var(--panel2);font-weight:700;font-size:13px;color:${x.w?'var(--good)':'var(--bad)'}">${xf(x.m)}×</span>`).join(' ');}
+function renderRocket(){
+  $('#main').innerHTML=backG()+`<div class="panel" style="text-align:center"><h2>Ракета</h2>
+    <div class="note">Ракета летить вгору й вправо, а множник росте. Забери виграш до вибуху: від ×1 до ×15, кожного разу випадково.</div>
+    <div style="position:relative;height:230px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0f1b3d,#243b7a);margin:10px 0">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><polyline id="rkln" fill="none" stroke="#f5b81c" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" points=""/></svg>
+      <div id="rkro" style="position:absolute;left:7%;bottom:9%;font-size:30px;line-height:1;transform:translate(-50%,50%)">🚀</div>
+      <div id="rkx" style="position:absolute;left:0;right:0;top:12px;font-weight:800;font-size:34px;color:#fff">1,00×</div>
+    </div>
+    <div style="display:flex;justify-content:center">${betHTML()}</div>
+    <div class="acts"><button class="btn" id="rkgo" onclick="rkStart()">🚀 Запуск</button></div>
+    <div style="margin-top:8px"><button class="btn" id="rkcash" style="display:none;width:100%" onclick="rkCash()">Забрати</button></div>
+    <div class="gres" id="gres"></div>
+    <div class="note" style="margin-top:8px">Останні польоти:</div><div id="rkh" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${rkHist()}</div></div>`;
+}
+function rkDraw(m,boom){
+  if(!gameOn('rocket'))return;
+  const p=rkPos(m),ro=$('#rkro'),ln=$('#rkln'),x=$('#rkx'),cb=$('#rkcash');
+  RK.pts.push(p.x.toFixed(1)+','+(100-p.y).toFixed(1));if(RK.pts.length>400)RK.pts.shift();
+  if(ln)ln.setAttribute('points',RK.pts.join(' '));
+  if(ro){ro.style.left=p.x+'%';ro.style.bottom=p.y+'%';if(boom)ro.textContent='💥';}
+  if(x){x.textContent=xf(m)+'×';if(boom)x.style.color='#ff6b6b';}
+  if(cb&&!boom)cb.textContent='Забрати '+fmt(Math.floor(RK.bet*Math.floor(m*100)/100))+' монет (×'+xf(m)+')';
+}
+function rkStart(){
+  if(spinning||RK.on)return;
+  const b=takeBet();if(!b)return;
+  /* шанс дожити до ×x дорівнює 95%/x, тож середній результат при будь-якій тактиці 95% від ставки; стеля ×15 */
+  const u=Math.random();
+  RK.crash=Math.min(15,Math.max(1,Math.floor(.95/(1-u)*100)/100));
+  RK.k=.8+Math.random()*.5;RK.bet=b;RK.on=true;RK.t0=Date.now();RK.pts=[];RK.m=1;
+  S.bal-=b;saveState();updBal();spinning=true;setBtns(true);
+  const g=$('#gres'),cb=$('#rkcash'),ro=$('#rkro'),x=$('#rkx');
+  if(g){g.textContent='';g.className='gres';}
+  if(cb){cb.style.display='';cb.disabled=false;}
+  if(ro)ro.textContent='🚀';if(x)x.style.color='#fff';
+  RK.raf=requestAnimationFrame(rkTick);
+}
+function rkTick(){
+  if(!RK.on)return;
+  let m=rkM((Date.now()-RK.t0)/1000),end='';
+  if(RK.crash<15&&m>=RK.crash){m=RK.crash;end='boom';}
+  else if(m>=15){m=15;end='max';}
+  RK.m=m;rkDraw(m,end==='boom');
+  if(end==='max'){rkCash(true);return;}
+  if(end==='boom'){rkFinish(false,m,0);return;}
+  RK.raf=requestAnimationFrame(rkTick);
+}
+function rkCash(auto){
+  if(!RK.on)return;
+  const m=auto===true?15:Math.floor(RK.m*100)/100,pay=Math.floor(RK.bet*m);
+  S.bal+=pay;rkFinish(true,m,pay);
+}
+function rkFinish(win,m,pay){
+  RK.on=false;cancelAnimationFrame(RK.raf);
+  S.rkh=(S.rkh||[]).concat({m,w:win?1:0}).slice(-14);
+  saveState();spinning=false;updBal();
+  if(!gameOn('rocket'))return;
+  setBtns(false);
+  const cb=$('#rkcash'),g=$('#gres'),h=$('#rkh');
+  if(cb)cb.style.display='none';
+  if(h)h.innerHTML=rkHist();
+  if(g){g.className='gres '+(win?'win':'lose');g.textContent=win?`Забрано ×${xf(m)}. Виграш +${fmt(pay-RK.bet)}`:`Вибухнула на ×${xf(m)}. Програш −${fmt(RK.bet)}`;}
 }
 
 /* ===== Міни ===== */
